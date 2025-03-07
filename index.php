@@ -7,37 +7,14 @@ try {
         die("Chyba připojení: " . mysqli_connect_error());
     }
 
-    // Výchozí dotaz
-    $query = "SELECT productId, nazev, cena, popis FROM product";
+    // Dotaz pro vypis do tabulky
+    $query = "SELECT productId, isbn, krestni, prijmeni, nazev, popis, obrazek FROM product";
     
-    // Pokud je zadaný filtr
-    if (isset($_GET['search']) && !empty($_GET['search'])) {
-        $search = trim($_GET['search']);
-        $query = " WHERE nazev LIKE ?";
-    }
-
     $stmt = mysqli_prepare($con, $query);
-    
-    if (isset($search)) {
-        $search = "%" . $search . "%";
-        mysqli_stmt_bind_param($stmt, "s", $search);
-    }
-
+       
     mysqli_stmt_execute($stmt);
+
     $result = mysqli_stmt_get_result($stmt);
-
-    // Výpočet celkového součtu cen všech produktů
-    $totalQuery = "SELECT SUM(cena) AS total FROM product";
-    $totalResult = mysqli_query($con, $totalQuery);
-    $totalRow = mysqli_fetch_assoc($totalResult);
-    $totalPrice = $totalRow['total'];
-
-    // Vložení celkové ceny do tabulky jako nový záznam
-    // $insertQuery = "INSERT INTO product (nazev, cena, popis) VALUES ('Celková cena', ?, 'Součet všech produktů')";
-    // $insertStmt = mysqli_prepare($con, $insertQuery);
-    // mysqli_stmt_bind_param($insertStmt, "d", $totalPrice);
-    // mysqli_stmt_execute($insertStmt);
-    // mysqli_stmt_close($insertStmt);
 
 
 } catch (Exception $e) {
@@ -57,53 +34,70 @@ try {
       crossorigin="anonymous"
     />
 </head>
-<body>
+<body class="bg-light">
 
-<div class="container my-2">
-    <h3 class="text-center mb-4">Vypis produktu</h3>
+<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.php">Knihy</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="index.php">Výpis knih</a>
+        <a class="nav-link" href="formAdd.php">Vlož knihu</a>
+        <a class="nav-link" href="search.php">Vyhledej knihu</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-    <form method="GET" class="mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Hledat podle názvu..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-        <button type="submit" class="btn btn-primary mt-2">Hledat</button>
-    </form>
 
-    <table class="table table-striped">
-        <tr>
-        <th>Nazev</th>
-        <th>Cena(kc)</th>
-        <th>Popis</th>
-        <th>Upravy</th>
-        </tr>
-    <?php 
-     while($radek = mysqli_fetch_array($result)){
+<div class="container">
+<h3 class="text-center my-4">Výpis knih</h3>
+    <div class="row">
+        <div class="col-8">      
+            <table class="table table-striped table-light">
+                <thead>
+                    <tr>
+                    <th class="">ISBN</th>
+                    <th class="">Jméno autora</th>
+                    <th class="">Příjmení autora</th>
+                    <th class="">Název knihy</th>
+                    <th class="">Popis</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <?php
+                    while($radek = mysqli_fetch_array($result)){
+                    ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($radek['isbn']) ?></td>
+                        <td><?php echo htmlspecialchars($radek['krestni'])?></td>
+                        <td><?php echo htmlspecialchars($radek['prijmeni']) ?></td>
+                        <td><?php echo htmlspecialchars($radek['nazev']) ?></td>
+                        <td><?php echo htmlspecialchars($radek['popis']) ?></td>
+                    </tr>
+                    <?php
+                        $obrazek = htmlspecialchars($radek['obrazek']); 
+                    }
+                    ?>
+                    
+                    </tbody>
+                </table>
+        </div>
+        
+         <div class="col-4 d-flex align-items-center justify-content-center">
+            <?php if (!empty($obrazek)): ?>
+                <img src="<?php echo $obrazek; ?>" class="img-fluid" style="max-height: 250px;" alt="Obálka knihy">
+            <?php else: ?>
+                <p>Obrázek není dostupný</p>
+            <?php endif; ?>
+        </div>
+        <hr>
+</div>
 
-        // Formátování cisla(ceny)parametr1: promenna, parametr2: pocet deset.mist,parametr3: jaky oddelovac nuly, parametr4: oddelovac 1000
-        $formattedPrice = number_format($radek['cena'], 2, ',', ' '); 
-        ?>
-        <tr>
-            <td><?php echo htmlspecialchars($radek['nazev']) ?></td>
-            <td><?php echo $formattedPrice ?></td>
-            <td><?php echo htmlspecialchars($radek['popis']) ?></td>
-            <td>
-                <a class="btn btn-warning" href="formEdit.php?productId=<?php echo $radek['productId']?>">Upravit</a>
-                <a class="btn btn-danger" href="delete.php?productId=<?php echo htmlspecialchars($radek['productId']); ?>" 
-                    onclick="return confirm('Opravdu chceš smazat záznam?')">Smazat</a>
-            </td>
-        </tr>                 
-        <?php
-     }
-    ?>
-    <tr>
-        <td><strong>Celkova cena</strong></td>
-        <td><?php echo htmlspecialchars(number_format($totalPrice,2,',',' '))?> kc</td>
-        <td></td>
-        <td></td>
-    </tr>
-     </table>
-     <form method="POST" action="formAdd.php">
-        <input type="submit" class="btn btn-success" value="Pridej zaznam">
-     </form>
- </div>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
