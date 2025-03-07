@@ -14,7 +14,7 @@
   </head>
   <body class="bg-light">
     
-  <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+  <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="index.php">Knihy</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,84 +24,85 @@
       <div class="navbar-nav">
         <a class="nav-link" href="index.php">Výpis knih</a>
         <a class="nav-link active" href="formAdd.php">Vlož knihu</a>
-        <a class="nav-link" href="search.php">Vyhledej knihu</a>
+        <a class="nav-link" href="formSearch.php">Vyhledej knihu</a>
       </div>
     </div>
   </div>
 </nav>
 
 
-    <h3 class="text-center my-4">Zadejte parametry knihy</h3>
-    <div class="container col-6">
-      <form action="add.php" method="POST">
-        <div class="my-2">
-          <label class="form-label" for="isbn">ISBN</label>
-          <input
-            class="form-control"
-            type="text"
-            name="isbn"
-            id="isbn"
-            placeholder="zadejte ISBN"
-            required
-          />
-        </div>
-        <div class="my-2">
-          <label class="form-label" for="krestni">Jméno autora</label>
-          <input
-            class="form-control"
-            type="text"
-            name="krestni"
-            placeholder="zadejte jemno autora"
-            
-            required
-          />
-        </div>
-        <div class="my-2">
-          <label class="form-label" for="prijmeni">Příjemní autora</label>
-          <input
-            class="form-control"
-            type="text"
-            name="prijmeni"
-            placeholder="zadejte příjmení autora"          
-            required
-          />
-        </div>
-        <div class="my-2">
-          <label class="form-label" for="nazev">Název knihy</label>
-          <input
-            class="form-control"
-            type="text"
-            name="nazev"
-            placeholder="zadejte název knihy"
-            required
-          />
-        </div>
-        <div class="my-2">
-          <label class="form-label" for="obrazek">Fotka knihy</label>
-          <input
-            class="form-control"
-            type="text"
-            name="obrazek"
-            placeholder="zadejte link na zdrojový obrázek"
-            required
-          />
-        </div>
-
-        <div class="my-2">
-          <label class="form-label" for="popis">Popis knihy</label>
-          <textarea
-            class="form-control"
-            type="text"
-            name="popis"
-            id="popis"
-            cols="50"
-            rows="5"
-            placeholder="zadejte popis knihy"
-            required
-          ></textarea>
-        </div>
-        <input class="btn btn-warning" type="submit" value="Ulozit zaznam" />
-      </form>
+    <div class="container my-4">
+      <h3 class="text-center my-4">Zadejte parametry knihy</h3>
+      <div class="container col-8">
+        <form action="add.php" method="POST">
+          <div class="my-2">
+            <label class="form-label" for="isbn">ISBN</label>
+            <input
+              class="form-control"
+              type="text"
+              name="isbn"
+              id="isbn"
+              placeholder="ISBN"
+              required
+            />
+          </div>
+          <div class="my-2">
+            <label class="form-label" for="krestni">Jméno autora</label>
+            <input
+              class="form-control"
+              type="text"
+              name="krestni"
+              placeholder="jméno..."
+      
+              required
+            />
+          </div>
+          <div class="my-2">
+            <label class="form-label" for="prijmeni">Příjemní autora</label>
+            <input
+              class="form-control"
+              type="text"
+              name="prijmeni"
+              placeholder="příjmení..."
+              required
+            />
+          </div>
+          <div class="my-2">
+            <label class="form-label" for="nazev">Název knihy</label>
+            <input
+              class="form-control"
+              type="text"
+              name="nazev"
+              placeholder="název..."
+              required
+            />
+          </div>
+          <div class="my-2">
+            <label class="form-label" for="obrazek">Fotka knihy</label>
+            <input
+              class="form-control"
+              type="text"
+              name="obrazek"
+              placeholder="zadejte link na zdrojový obrázek..."
+              required
+            />
+          </div>
+          <div class="my-2">
+            <label class="form-label" for="popis">Popis knihy</label>
+            <textarea
+              class="form-control"
+              type="text"
+              name="popis"
+              id="popis"
+              cols="50"
+              rows="5"
+              placeholder="popis..."
+              required
+            ></textarea>
+          </div>
+          <input class="btn btn-warning" type="submit" value="Uložit záznam" />
+        </form>
+      </div>
     </div>
 
     <script

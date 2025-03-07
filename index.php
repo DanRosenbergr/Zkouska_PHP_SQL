@@ -36,7 +36,7 @@ try {
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="index.php">Knihy</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,58 +44,56 @@ try {
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="index.php">Výpis knih</a>
+        <a class="nav-link active" href="index.php">Výpis knih</a>
         <a class="nav-link" href="formAdd.php">Vlož knihu</a>
-        <a class="nav-link" href="search.php">Vyhledej knihu</a>
+        <a class="nav-link" href="formSearch.php">Vyhledej knihu</a>
       </div>
     </div>
   </div>
 </nav>
 
-
 <div class="container">
-<h3 class="text-center my-4">Výpis knih</h3>
+    <h3 class="text-center my-4">Výpis knih</h3>
     <div class="row">
-        <div class="col-8">      
+        <div class="col-12">
             <table class="table table-striped table-light">
                 <thead>
                     <tr>
-                    <th class="">ISBN</th>
-                    <th class="">Jméno autora</th>
-                    <th class="">Příjmení autora</th>
-                    <th class="">Název knihy</th>
-                    <th class="">Popis</th>
+                        <th class="col-1 text-center">ISBN</th>
+                        <th class="col-1 text-center">Jméno autora</th>
+                        <th class="col-1 text-center">Příjmení autora</th>
+                        <th class="col-2 text-center">Název knihy</th>
+                        <th class="col-4 text-center">Popis</th>
+                        <th class="col-3 text-center">Obálka</th> <!-- Nový sloupec pro obrázek -->
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    <?php
-                    while($radek = mysqli_fetch_array($result)){
-                    ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($radek['isbn']) ?></td>
-                        <td><?php echo htmlspecialchars($radek['krestni'])?></td>
-                        <td><?php echo htmlspecialchars($radek['prijmeni']) ?></td>
-                        <td><?php echo htmlspecialchars($radek['nazev']) ?></td>
-                        <td><?php echo htmlspecialchars($radek['popis']) ?></td>
-                    </tr>
-                    <?php
-                        $obrazek = htmlspecialchars($radek['obrazek']); 
-                    }
-                    ?>
-                    
-                    </tbody>
-                </table>
-        </div>
-        
-         <div class="col-4 d-flex align-items-center justify-content-center">
-            <?php if (!empty($obrazek)): ?>
-                <img src="<?php echo $obrazek; ?>" class="img-fluid" style="max-height: 250px;" alt="Obálka knihy">
-            <?php else: ?>
-                <p>Obrázek není dostupný</p>
-            <?php endif; ?>
-        </div>
-        <hr>
+                    <?php while ($radek = mysqli_fetch_array($result)): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($radek['isbn']); ?></td>
+                            <td><?php echo htmlspecialchars($radek['krestni']); ?></td>
+                            <td><?php echo htmlspecialchars($radek['prijmeni']); ?></td>
+                            <td><?php echo htmlspecialchars($radek['nazev']); ?></td>
+                            <td><?php echo htmlspecialchars($radek['popis']); ?></td>
+                            <td>
+                                <?php if (!empty($radek['obrazek'])): ?>
+                                    <div class="d-flex justify-content-center">
+                                        <img src="<?php echo htmlspecialchars($radek['obrazek']); ?>"
+                                             class="img-fluid" style="max-height: 250px;"
+                                             alt="Obálka knihy">
+                                    </div>
+                                <?php else: ?>
+                                    <p>Obrázek není dostupný</p>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>   
+    </div>  
 </div>
+
 
 
     <script
